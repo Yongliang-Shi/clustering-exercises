@@ -10,10 +10,21 @@ def get_connection(db, user=env.user, host=env.host, password=env.password):
     """
     return f'mysql+pymysql://{user}:{password}@{host}/{db}'
 
+# %%
+def acquire_only(db,query):
+    """
+    Return df only according to the query. 
+    Parameters: db(str.), querry(str.)
+    """
+    url = get_connection(db)
+    df = pd.read_sql(query, url, index_col=0)
+    return df
+
 #%%
 def get_zillow_data(query, iteration):
     """
     Returns in df format zillow dataset according to the querry.
+    The df is read either directly from the local .csv or from the cloud.
     The df has the suffix indicating the version number.
     Parameters: querry(str), iteration(int)
     """
