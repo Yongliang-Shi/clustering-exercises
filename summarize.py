@@ -2,22 +2,32 @@ import numpy as np
 import pandas as pd
 
 # %%
-def df_obj(df):
+def obj_df(df):
     """
-    Returns the df only containing object columns
+    Returns the dataframe only containing object columns
     Paramter: df
     """
     mask = np.array(df.dtypes == 'object')
-    obj_df = df.iloc[:, mask]
-    return obj_df
+    df_obj = df.iloc[:, mask]
+    return df_obj
 
 # %%
-def object_cols (df):
+def obj_cols (df):
     """
     Returns the object columns of the dataframe and their unique values (don't include NaN in counts). 
     Paramter: df
     """
-    obj_df = df_obj(df)
-    obj_cols = pd.DataFrame(obj_df.dtypes, columns=['dtypes'])
-    obj_cols['unique_values'] = obj_df.nunique()
+    df_obj = obj_df(df)
+    obj_cols = pd.DataFrame(df_obj.dtypes, columns=['dtypes'])
+    obj_cols['unique_values'] = df_obj.nunique()
     return obj_cols
+
+# %%
+def obj_value_counts(df):
+    """
+    Returns the counts of unique values in the object columns in the dataframe.
+    Parameter: df
+    """
+    df_obj = obj_df(df)
+    for col in df_obj.columns:
+        print(df_obj[col].value_counts)
