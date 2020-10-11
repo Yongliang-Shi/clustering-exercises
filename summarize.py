@@ -12,7 +12,7 @@ def obj_df(df):
     return df_obj
 
 # %%
-def obj_cols (df):
+def sum_obj_cols (df):
     """
     Returns the object columns of the dataframe and their unique values (don't include NaN in counts). 
     Paramter: df
@@ -44,3 +44,14 @@ def num_df(df):
     mask = float_mask | int_mask
     df_obj = df.iloc[:, mask]
     return df_obj
+
+# %%
+def sum_missing_values(df):
+    """
+    Return a dataframe the number of rows and pct of total rows that having missing values
+    Parameter: interested df
+    """
+    missing_values = pd.DataFrame(df.isna().sum(axis=0), columns=['num_row_missing'])
+    total_rows = df.shape[0]
+    missing_values['pct_rows_missing'] = missing_values.num_row_missing/total_rows
+    return missing_values
