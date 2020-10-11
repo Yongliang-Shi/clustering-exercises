@@ -30,4 +30,17 @@ def obj_value_counts(df):
     """
     df_obj = obj_df(df)
     for col in df_obj.columns:
-        print(df_obj[col].value_counts)
+        print(df_obj[col].value_counts())
+        print('-'*100)
+
+# %%
+def num_df(df):
+    """
+    Returns the dataframe only containing float or int columns
+    Paramter: df
+    """
+    float_mask = np.array(df.dtypes == 'float')
+    int_mask = np.array(df.dtypes == 'int')
+    mask = float_mask | int_mask
+    df_obj = df.iloc[:, mask]
+    return df_obj
