@@ -14,7 +14,7 @@ def obj_df(df):
 # %%
 def sum_obj_cols (df):
     """
-    Returns the object columns of the dataframe and their unique values (don't include NaN in counts). 
+    Returns the object columns with their unique values (don't include NaN in counts). 
     Paramter: df
     """
     df_obj = obj_df(df)
@@ -25,7 +25,7 @@ def sum_obj_cols (df):
 # %%
 def obj_value_counts(df):
     """
-    Returns the counts of unique values in the object columns in the dataframe.
+    Returns the counts of unique values for each object column in the dataframe.
     Parameter: df
     """
     df_obj = obj_df(df)
@@ -36,7 +36,7 @@ def obj_value_counts(df):
 # %%
 def num_df(df):
     """
-    Returns the dataframe only containing float or int columns
+    Subset the dataframe only containing float or int columns
     Paramter: df
     """
     float_mask = np.array(df.dtypes == 'float')
@@ -46,12 +46,25 @@ def num_df(df):
     return df_obj
 
 # %%
-def sum_missing_values(df):
+def sum_missing_values_attributes(df):
     """
-    Return a dataframe the number of rows and pct of total rows that having missing values
+    Count how many missing values in each attribute
     Parameter: interested df
     """
     missing_values = pd.DataFrame(df.isna().sum(axis=0), columns=['num_row_missing'])
     total_rows = df.shape[0]
     missing_values['pct_rows_missing'] = missing_values.num_row_missing/total_rows
     return missing_values
+
+# %%
+def sum_missing_values_cols(df):
+    """
+    Group the rows based on how many missing values they have
+    Parameter: interested df
+    """
+    missing_values = df.isnull().sum(axis=1).value_counts().sort_index()
+    cols_missing_values = {'num_cols_missing': missing_values.index.tolist(), 'num_rows': missing_values.values.tolist()}
+    cols_missing_values = pd.DataFrame(cols_missing_values)
+    total_rows = df.shape[0]
+    cols_missing_values['pct_cols_missing'] = (cols_missing_values.num_rows/total_rows)*100
+    return cols_missing_values
