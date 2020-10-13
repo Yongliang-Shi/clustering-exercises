@@ -83,13 +83,52 @@ def lower_outlier_columns(df, k):
     return df1
 
 # %%
+def split_my_data(df, pct=0.10):
+    '''
+    This divides a dataframe into train, validate, and test sets. 
+    Parameters - (df, pct=0.10)
+    df = dataframe you wish to split
+    pct = size of the test set, 1/2 of size of the validate set
+    Returns three dataframes (train, validate, test)
+    '''
+    train_validate, test = train_test_split(df, test_size=pct, random_state = 123)
+    train, validate = train_test_split(train_validate, test_size=pct*2, random_state = 123)
+    return train, validate, test
+
+# %%
+def split_stratify_my_data(df, strat, pct=0.10):
+    '''
+    This divides a dataframe into train, validate, and test sets straifying on the selected feature
+    Parameters - (df, pct=0.10, stratify)
+    df = dataframe you wish to split
+    pct = size of the test set, 1/2 of size of the validate set
+    stratify = a string of the column name of the feature you wish to stratify on
+    Returns three dataframes (train, validate, test)
+    '''
+    train_validate, test = train_test_split(df, test_size=pct, random_state = 123, stratify=df[strat])
+    train, validate = train_test_split(train_validate, test_size=pct*2, random_state = 123, stratify=train_validate[strat])
+    return train, validate, test
+
+# %%
+def encode_label(df, columns_to_encode):
+    """
+    Dummy coding of categorical varibales
+    Parameters: df, columns_to_encode(list)
+    """
+    obj_df = df[columns_to_encode]
+    dummy_df = pd.get_dummies(obj_df, dummy_na=False, drop_first=True)
+    df = pd.concat([df, dummy_df], axis=1)
+    df.drop(columns=columns_to_encode, inplace=True)
+    return df
+
+# %%
 def scale(train, validate, test, columns_to_scale):
     """
     Scale the columns using MinMaxScaler
     Parameters: train(df), validate(df), test(df), columns_to_scale(list)
     """
     new_column_names = [c + '_scaled' for c in columns_to_scale]
-    scaler = sklearn.preprocessing.MinMaxScaler()
+    scaler = MinMaxScaler()
     scaler.fit(train[columns_to_scale])
 
     train = pd.concat([
