@@ -4,6 +4,10 @@ warnings.filterwarnings("ignore")
 import numpy as np
 import pandas as pd
 
+from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder, MinMaxScaler
+
 import acquire
 
 # %%
@@ -48,22 +52,20 @@ def get_upper_outliers(s, k):
     return s.apply(lambda x: max([x - upper_bound, 0]))
 
 # %%
-def add_upper_outlier_columns(df, k):
+def upper_outlier_columns(df, k):
     '''
-    Add a column with the suffix _upper_outliers for all the numeric columns
-    in the given dataframe.
+    Return the column(s) with the upper_outliers for all the numeric columns in the given dataframe.
     '''
+    df1 = pd.DataFrame()
     for col in df.select_dtypes('number'):
-        df[col + '_upper_outliers'] = get_upper_outliers(df[col], k)
-    return df
+        df1[col + '_upper_outliers'] = get_upper_outliers(df[col], k)
+    return df1
 
 # %%
 def get_lower_outliers(s, k):
     '''
-    Given a series and a cutoff value, k, returns the upper outliers for the
-    series.
-    The values returned will be either 0 (if the point is not an outlier), or a
-    number that indicates how far away from the upper bound the observation is.
+    Given a series and a cutoff value, k, returns the upper outliers for the series.
+    The values returned will be either 0 (if the point is not an outlier), or a number that indicates how far away from the upper bound the observation is.
     '''
     q1, q3 = s.quantile([.25, .75])
     iqr = q3 - q1
@@ -71,14 +73,14 @@ def get_lower_outliers(s, k):
     return s.apply(lambda x: min([x - lower_bound, 0]))
 
 # %%
-def add_lower_outlier_columns(df, k):
+def lower_outlier_columns(df, k):
     '''
-    Add a column with the suffix _lower_outliers for all the numeric columns
-    in the given dataframe.
+    Return the column(s) with the lower_outliers for all the numeric columns in the given dataframe.
     '''
+    df1 = pd.DataFrame()
     for col in df.select_dtypes('number'):
-        df[col + '_lower_outliers'] = get_lower_outliers(df[col], k)
-    return df
+        df1[col + '_lower_outliers'] = get_lower_outliers(df[col], k)
+    return df1
 
 # %%
 def scale(train, validate, test, columns_to_scale):
