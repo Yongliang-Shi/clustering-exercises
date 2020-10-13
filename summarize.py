@@ -1,5 +1,11 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import numpy as np
 import pandas as pd
+
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # %%
 def obj_df(df):
@@ -25,7 +31,7 @@ def sum_obj_cols (df):
 # %%
 def obj_value_counts(df):
     """
-    Returns the counts of unique values for each object column in the dataframe.
+    Count the unique values of each object column in the dataframe.
     Parameter: df
     """
     df_obj = obj_df(df)
@@ -68,3 +74,11 @@ def sum_missing_values_cols(df):
     total_rows = df.shape[0]
     cols_missing_values['pct_cols_missing'] = (cols_missing_values.num_rows/total_rows)*100
     return cols_missing_values
+
+# %%
+def plot_variable_pairs(df):
+    """
+    Pair-plot the variables
+    Parameter: df
+    """
+    return sns.pairplot(df, kind='reg')
