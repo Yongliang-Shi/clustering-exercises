@@ -7,7 +7,7 @@ import pandas as pd
 import acquire
 
 # %%
-def clean_zillow(zillow):
+def keep_last_transaction(zillow):
     zillow.drop_duplicates(subset=['parcelid'], keep='last', inplace=True, ignore_index=True)
     return zillow
 
