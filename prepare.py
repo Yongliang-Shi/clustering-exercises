@@ -143,5 +143,14 @@ def scale(train, validate, test, columns_to_scale):
         test,
         pd.DataFrame(scaler.transform(test[columns_to_scale]), columns=new_column_names, index=test.index),
     ], axis=1)
-    
+    return train, validate, test
+
+# %%
+def prep_iris(iris):
+    iris.drop(columns=['species_id','measurement_id'], inplace=True)
+    iris.rename(columns={'species_name':'species'}, inplace=True)
+    species_dummy = pd.get_dummies(iris[['species']])
+    iris = pd.concat([iris, species_dummy], axis=1)
+    train_validate, test = train_test_split(iris, test_size=.2, random_state=123, stratify=iris.species)
+    train, validate = train_test_split(train_validate, test_size=.3, random_state=123, stratify=train_validate.species)
     return train, validate, test
