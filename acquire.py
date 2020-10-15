@@ -76,3 +76,14 @@ def get_mall_data():
         df = pd.read_sql("""select * from customers""", get_connection('mall_customers'))
         df.to_csv(filename)
         return df
+
+# %%
+def get_iris_data():
+    filename = 'iris.csv'
+    
+    if os.path.isfile(filename):
+        return pd.read_csv(filename, index_col=0)
+    else: 
+        df = pd.read_sql("""select * from measurements join species using(species_id)""", get_connection('iris_db'))
+        df.to_csv(filename)
+        return df
